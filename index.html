@@ -7,26 +7,75 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script> 
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> 
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
+    <link rel="stylesheet" href="style.css">
 
 </head>
 <body>
     <div class="lista-animali"></div>
     <script type="text/babel">
-    const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
-
+    function Modal({
+      title, 
+      content, 
+      show = false, 
+      onClose,
+      onConfirm
+  }){
+      return show && ReactDOM.createPortal(
+          <div className="modal-container">
+              <div className="modal">
+                  <h2>{title}</h2>
+                  <p>{content}</p>
+                  <button onClick={onClose}>Annulla</button>
+                  <button onClick={onConfirm}>Conferma</button>
+              </div>
+          </div>,
+          document.body
+      )
+  }
        
         function AnimalsList(){
             const [animals,setAnimals]=React.useState(["cane","gatto","giraffa"])
+            const [showModal,setShowModal]=React.useState(false);
+            const [animalName,setAnimalName]=React.useState("");
 
-            const addRandomAnimal=()=>{
-                const randomAnimal=animalsChoices[Math.floor(Math.random()*animalsChoices.length)];
-                setAnimals([...animals, randomAnimal]);
-            };
+
+           const handleAddAnimal=()=>{
+            if(animalName){
+                setAnimals([...animals,animalName]);
+                setAnimalName("");
+                setShowModal(false);
+            }
+           };
+            
+           const handleOpenModal=()=>{
+            setShowModal(true);
+           }
+
+           const handleCloseModal=()=>{
+            setShowModal(false);
+           };
+
+
             return(
                <>
                <h1>I miei animali preferiti</h1>
-               <button onClick={addRandomAnimal}>aggiungi animale casuale</button>
+               <button onClick={handleOpenModal}>aggiungi animale </button>
+               <Modal
+               title="aggiungi nuovo animale"
+               content={
+                <input
+                type="text"
+                value={animalName}
+                onChange={(e)=>setAnimalName(e.target.value)}
+                placeholder="nome animale"
+                />
+               }
+               show={showModal}
+               onClose={handleCloseModal}
+               onConfirm={handleAddAnimal}
+               />
+
+
             <details>
                 <summary>Animali</summary>
                 <ul>
