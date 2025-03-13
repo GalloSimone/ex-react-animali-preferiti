@@ -13,10 +13,21 @@
 <body>
     <div class="lista-animali"></div>
     <script type="text/babel">
-        const animals= ["cane","gatto","pappagallo","cavallo","panda"]
+    const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+
+       
         function AnimalsList(){
+            const [animals,setAnimals]=React.useState(["cane","gatto","giraffa"])
+
+            const addRandomAnimal=()=>{
+                const randomAnimal=animalsChoices[Math.floor(Math.random()*animalsChoices.length)];
+                setAnimals([...animals, randomAnimal]);
+            };
             return(
-                <details>
+               <>
+               <h1>I miei animali preferiti</h1>
+               <button onClick={addRandomAnimal}>aggiungi animale casuale</button>
+            <details>
                 <summary>Animali</summary>
                 <ul>
                 {animals.map((animal,index)=>(
@@ -24,6 +35,7 @@
                 ))}
                 </ul>
                 </details>
+                </>
             )
         }
         const root = ReactDOM.createRoot(document.querySelector('.lista-animali'));
